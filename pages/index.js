@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     requestPokeList();
   }, []);
-  
+
    async function requestPokeList() {
     if (textlbl.length !== "") {
       await fetch(`https://pokeapi.co/api/v2/pokemon/`).then((res) =>
@@ -32,7 +32,12 @@ export default function Home() {
     return (
       <div>
         {listaPokemon.map((pokemon) => {
-          return <p>{pokemon.name}</p>;
+          return (
+            <>
+              <p>{pokemon.name}</p>
+              <p>test</p>
+            </>
+          )
         })}
       </div>
     );
