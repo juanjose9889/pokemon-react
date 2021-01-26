@@ -1,28 +1,27 @@
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
 import React, { useEffect, useState } from "react";
+//import characterCard from "characterCard";
 
 export default function Home() {
-  const [textlbl, setTextlbl] = useState("");
-  const [listaPokemon, setListaPokemon] = useState([]); 
- const [pokemon, setPokemon] = useState(null);
 
+  const [textlbl, setTextlbl] = useState("");
+  const [characterList, setcharacterList] = useState([]);
+  const [character, setcharacter] = useState(null);
 
 
   /**
-   * Componente Lista
+   * List function
    */
 
   useEffect(() => {
-    requestPokeList();
+    requestCharacterList();
   }, []);
-  
-   async function requestPokeList() {
+
+  async function requestCharacterList() {
     if (textlbl.length !== "") {
-      await fetch(`https://pokeapi.co/api/v2/pokemon/`).then((res) =>
+      await fetch(`https://rickandmortyapi.com/api/character`).then((res) =>
         res.json().then((data) => {
           console.log(data);
-          setListaPokemon(data.results);
+          setcharacterList(data.results);
         })
       );
     }
@@ -30,40 +29,46 @@ export default function Home() {
 
   function render() {
     return (
-      <div>
-        {listaPokemon.map((pokemon) => {
-          return <p>{pokemon.name}</p>;
-        })}
-      </div>
+        characterList.map((character) => {
+          return <p class="text-indigo-600">{character.name}</p>;
+        })
     );
   }
 
   /**
-   * Componente Busqueda
+   * Search function
    */
 
-  async function requestPoke() {
+  function requestCharacter() {
     if (textlbl.length !== "") {
-      await fetch(`https://pokeapi.co/api/v2/pokemon/${textlbl}`).then((res) =>
-        res.json().then((data) => {
-          console.log(data);
-          setPokemon(data);
-        })
-      );
+      characterList.map((character) => {
+        if (character.name == textlbl) {
+          console.log(character.name);
+          setcharacter(character);
+        }
+      })
+
     }
   }
 
   return (
-    <div>
-      <input
-        value={textlbl}
-        onChange={(evento) => {
-          console.log(evento);
-          setTextlbl(evento.target.value);
-        }}
-      />
-      <button onClick={requestPoke}>Click</button>
-      {pokemon ? <div>{pokemon.name}</div> : render() }
-    </div>
+    <main class="flex h-screen">
+      <div class="flex flex-col mx-auto items-center mt-4 container">
+
+        <input class="border border-black focus:outline-none focus:ring-2 focus:ring-black-600 focus:border-transparent"
+          value={textlbl}
+          onChange={(evento) => {
+            console.log(evento);
+            setTextlbl(evento.target.value);
+          }}
+        />
+        <button class="py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-green-500 hover:bg-green-700 transform hover:scale-110 motion-reduce:transform-none "
+          onClick={requestCharacter}>Search</button>
+          <div class="flex flex-col sm:flex-row grid grid-cols-4">
+
+          {character ? <div class="text-center">{character.name}</div> : render()}  
+          </div>
+      </div>
+    </main>
   );
 }
